@@ -100,7 +100,7 @@ class VirtualStockAccount():
             })
         return json.loads(res.text)
 
-    def buy(self, sid, quantity, price=None, leverage=False):
+    def buy(self, sid, quantity, price=None, leverage=False, long=True):
 
         """
         購買兩張台泥股票:
@@ -112,8 +112,10 @@ class VirtualStockAccount():
         if price is None:
             price = '漲停'
             time.sleep(self.wait_time)
-            
-        tradekind = 'cd' if leverage else 'c'
+        if leverage:
+            tradekind = 'cd' if long else 'sd'
+        else:
+            tradekind = 'c'
 
         # act: NewEntrust
         # aid: 578325
@@ -135,7 +137,7 @@ class VirtualStockAccount():
             'hasWarrant': 'true',
         })
 
-    def sell(self, sid, quantity, price=None, leverage=False):
+    def sell(self, sid, quantity, price=None, leverage=False, long=True):
 
         """
         賣出兩張台泥股票:
@@ -147,8 +149,11 @@ class VirtualStockAccount():
         if price is None:
             price = '跌停'
             time.sleep(self.wait_time)
-            
-        tradekind = 'sd' if leverage else 'c'
+
+        if leverage:
+            tradekind = 'cd' if long else 'sd'
+        else:
+            tradekind = 'c'
 
         res = self.ses.get('https://www.cmoney.tw/vt/ashx/userset.ashx', params={
             'act': 'NewEntrust',
@@ -324,10 +329,10 @@ class VirtualStockAccount():
                 stock_list = stock_list.loc[stock_list != stock_list.max()]
             else:
                 break
-                
+
         if short:
             ret = -ret
-            
+
         ret.to_csv('position' + str(self.aid) + '.csv')
         slist = ret.to_dict()
         return slist
