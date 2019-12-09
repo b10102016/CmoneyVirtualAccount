@@ -100,7 +100,7 @@ class VirtualStockAccount():
             })
         return json.loads(res.text)
 
-    def buy(self, sid, quantity, price=None, leverage=False, long=True):
+    def buy(self, sid, quantity, price=None, leverage=False, _long=True):
 
         """
         購買兩張台泥股票:
@@ -113,7 +113,7 @@ class VirtualStockAccount():
             price = '漲停'
             time.sleep(self.wait_time)
         if leverage:
-            tradekind = 'cd' if long else 'sd'
+            tradekind = 'cd' if _long else 'sd'
         else:
             tradekind = 'c'
 
@@ -137,7 +137,7 @@ class VirtualStockAccount():
             'hasWarrant': 'true',
         })
 
-    def sell(self, sid, quantity, price=None, leverage=False, long=True):
+    def sell(self, sid, quantity, price=None, leverage=False, _long=True):
 
         """
         賣出兩張台泥股票:
@@ -151,7 +151,7 @@ class VirtualStockAccount():
             time.sleep(self.wait_time)
 
         if leverage:
-            tradekind = 'cd' if long else 'sd'
+            tradekind = 'cd' if _long else 'sd'
         else:
             tradekind = 'c'
 
